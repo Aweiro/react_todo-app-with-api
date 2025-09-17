@@ -6,8 +6,8 @@ import classNames from 'classnames';
 
 interface Props {
   todo: Todo;
-  onDeleteTodos: (id: number) => void;
-  onUpdatePost: (todo: Todo) => void;
+  onDeleteTodos: (id: number) => Promise<void>;
+  onUpdatePost: (todo: Todo) => Promise<void>;
   loading: number[];
 }
 
@@ -45,23 +45,19 @@ export const TodoItem: React.FC<Props> = ({
     }
 
     if (trimmedQuery === '') {
-      onDeleteTodos(todo.id);
-      setShowInput(false);
+      onDeleteTodos(todo.id).then(() => setShowInput(false));
 
       return;
     }
 
-    onUpdatePost({ ...todo, title: query.trim() });
-    setShowInput(false);
+    onUpdatePost({ ...todo, title: query.trim() }).then(() =>
+      setShowInput(false),
+    );
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') {
       setShowInput(false);
-    }
-
-    if (e.key === 'Enter') {
-      handleSubmit(e);
     }
   };
 
@@ -92,8 +88,8 @@ export const TodoItem: React.FC<Props> = ({
             value={query}
             onBlur={handleSubmit}
             onChange={e => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
             ref={inputRef}
+            onKeyUp={handleKeyDown}
           />
         </form>
       ) : (
