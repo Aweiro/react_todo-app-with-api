@@ -8,12 +8,13 @@ import React, {
 import { Todo } from '../../types/Todo';
 import * as todoService from '../../api/todos';
 import classNames from 'classnames';
+import { ErrorMessages } from '../../types/Errors';
 
 interface Props {
   onTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
   onLoading: React.Dispatch<React.SetStateAction<number[]>>;
   onTempTodo: React.Dispatch<React.SetStateAction<Todo | null>>;
-  onErrorMessage: (message: string) => void;
+  onErrorMessage: (message: ErrorMessages) => void;
   todos: Todo[];
   disabledButton: boolean;
   loading: number[];
@@ -50,7 +51,7 @@ export const Header: React.FC<Props> = ({
     const trimmedQuery = query.trim();
 
     if (trimmedQuery === '') {
-      onErrorMessage('Title should not be empty');
+      onErrorMessage(ErrorMessages.Empty);
       onTempTodo(null);
       setDisabledInput(false);
 
@@ -76,7 +77,7 @@ export const Header: React.FC<Props> = ({
         setTimeout(() => inputRef.current?.focus(), 0);
       })
       .catch(() => {
-        onErrorMessage('Unable to add a todo');
+        onErrorMessage(ErrorMessages.Add);
         setTimeout(() => inputRef.current?.focus(), 0);
       })
       .finally(() => {
@@ -103,7 +104,7 @@ export const Header: React.FC<Props> = ({
               }),
             );
           })
-          .catch(() => onErrorMessage('Unable to update a todo'))
+          .catch(() => onErrorMessage(ErrorMessages.Update))
           .finally(() => {
             onLoading(prev => prev.filter(item => item !== todoToUpdate.id));
           });
