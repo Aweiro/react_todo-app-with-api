@@ -25,7 +25,7 @@ export const TodoList: React.FC<Props> = ({
   onErrorMessage,
   onDisabledButton,
 }) => {
-  function updatePost(todoToUpdate: Todo) {
+  const updatePost = (todoToUpdate: Todo) => {
     onLoading(prev => [...prev, todoToUpdate.id]);
 
     return todoService
@@ -52,9 +52,9 @@ export const TodoList: React.FC<Props> = ({
       .finally(() =>
         onLoading(prev => prev.filter(item => item !== todoToUpdate.id)),
       );
-  }
+  };
 
-  function deleteTodos(todoId: number) {
+  const deleteTodos = (todoId: number) => {
     onLoading(prev => [...prev, todoId]);
 
     return todoService
@@ -69,7 +69,7 @@ export const TodoList: React.FC<Props> = ({
         throw new Error();
       })
       .finally(() => onLoading(prev => prev.filter(item => item !== todoId)));
-  }
+  };
 
   useEffect(() => {
     const isAllCompleted =

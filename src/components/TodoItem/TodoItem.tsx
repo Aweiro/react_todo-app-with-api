@@ -19,12 +19,13 @@ export const TodoItem: React.FC<Props> = ({
 }) => {
   const [query, setQuery] = useState('');
   const [showInput, setShowInput] = useState(false);
+  const { id, title, completed } = todo;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDoubleClick = () => {
     setShowInput(true);
-    setQuery(todo.title);
+    setQuery(title);
   };
 
   useEffect(() => {
@@ -38,14 +39,14 @@ export const TodoItem: React.FC<Props> = ({
 
     const trimmedQuery = query.trim();
 
-    if (trimmedQuery === todo.title) {
+    if (trimmedQuery === title) {
       setShowInput(false);
 
       return;
     }
 
     if (trimmedQuery === '') {
-      onDeleteTodos(todo.id).then(() => setShowInput(false));
+      onDeleteTodos(id).then(() => setShowInput(false));
 
       return;
     }
@@ -64,16 +65,16 @@ export const TodoItem: React.FC<Props> = ({
   return (
     <div
       data-cy="Todo"
-      className={classNames('todo', { completed: todo.completed })}
+      className={classNames('todo', { completed: completed })}
     >
       <label className="todo__status-label">
         <input
           data-cy="TodoStatus"
           type="checkbox"
           className="todo__status"
-          checked={todo.completed}
+          checked={completed}
           onChange={() => {
-            onUpdatePost({ ...todo, completed: !todo.completed });
+            onUpdatePost({ ...todo, completed: !completed });
           }}
         />
       </label>
@@ -98,7 +99,7 @@ export const TodoItem: React.FC<Props> = ({
           className="todo__title"
           onDoubleClick={handleDoubleClick}
         >
-          {todo.title}
+          {title}
           <button
             type="button"
             data-cy="ForceEdit"
@@ -114,7 +115,7 @@ export const TodoItem: React.FC<Props> = ({
           type="button"
           className="todo__remove"
           data-cy="TodoDelete"
-          onClick={() => onDeleteTodos(todo.id)}
+          onClick={() => onDeleteTodos(id)}
         >
           ×
         </button>
@@ -124,7 +125,7 @@ export const TodoItem: React.FC<Props> = ({
       <div
         data-cy="TodoLoader"
         className={classNames('modal overlay', {
-          'is-active': loading.includes(todo.id || 0),
+          'is-active': loading.includes(id || 0),
         })}
       >
         <div className="modal-background has-background-white-ter" />

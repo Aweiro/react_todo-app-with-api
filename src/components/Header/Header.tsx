@@ -58,19 +58,17 @@ export const Header: React.FC<Props> = ({
       return;
     }
 
-    onTempTodo({
+    const newTodo = {
       id: 0,
       title: trimmedQuery,
       userId: todoService.USER_ID,
       completed: false,
-    });
+    };
+
+    onTempTodo(newTodo);
 
     todoService
-      .addTodos({
-        title: trimmedQuery,
-        userId: todoService.USER_ID,
-        completed: false,
-      })
+      .addTodos(newTodo)
       .then(newPost => {
         onTodos(currentTodos => [...currentTodos, newPost]);
         setQuery('');
@@ -87,7 +85,7 @@ export const Header: React.FC<Props> = ({
       });
   };
 
-  function handleClickAllCompleted(todosToUpdate: Todo[]) {
+  const handleClickAllCompleted = (todosToUpdate: Todo[]) => {
     todosToUpdate.map(todoToUpdate => {
       if ((!disabledButton && !todoToUpdate.completed) || disabledButton) {
         onLoading(prev => [...prev, todoToUpdate.id]);
@@ -110,7 +108,7 @@ export const Header: React.FC<Props> = ({
           });
       }
     });
-  }
+  };
 
   return (
     <header className="todoapp__header">
